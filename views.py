@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from rpx.models import RpxData
+from django-rpx.models import RpxData
 import settings
 
 def permute_name(name_string, num):
