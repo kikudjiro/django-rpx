@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from rpx.models import RpxData
+from rpx.views import permute_name
 import settings
 TRUSTED_PROVIDERS=set(getattr(settings,'RPX_TRUSTED_PROVIDERS', []))
 
@@ -77,6 +78,7 @@ class RpxBackend:
                     user=User.objects.create_user(username, email)
                 rpxdata=RpxData(identifier=rpx_id)
                 rpxdata.user=user
+                user.is_new = True
                 rpxdata.save()
             
         if profile_pic_url:

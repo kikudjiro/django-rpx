@@ -18,5 +18,6 @@ INSTALLATION:
     'rpx.backends.RpxBackend',
     'django.contrib.auth.backends.ModelBackend',
   )
-  * You might want to include the rpx template tags in your site code somewhere to provide a login link. Their embedded iframe version is not yet templated up. - the popup/link-out version is provided.
+  * rpx template tags are already included
+  * You will also need to serve /rpx_login and /rpx_register requests
   
