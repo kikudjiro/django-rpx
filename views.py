@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django-rpx.models import RpxData
+from django_rpx.models import RpxData
 import settings
 
 def permute_name(name_string, num):
@@ -16,9 +16,6 @@ def rpx_response(request):
     if not token: return HttpResponseForbidden()
     user=authenticate(token=token)
     if user and user.is_active:
-        login(request, user)
-        if hasattr(user, 'is_new'):
-            return HttpResponseRedirect('rpx_register')
-        return HttpResponseRedirect('rpx_login')
+        return HttpResponseRedirect('/')
     else:
         return HttpResponseForbidden()

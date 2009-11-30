@@ -28,7 +28,7 @@ def rpx_link(context, text):
       'text': text,
       'realm': settings.RPXNOW_REALM,
       'token_url': "http://%s%s" % (current_site.domain,
-        reverse('rpx.views.rpx_response'))
+        reverse('rpx_response'))
     }
     
 """
@@ -46,7 +46,7 @@ def rpx_script():
     return {
       'realm': settings.RPXNOW_REALM,
       'token_url': "http://%s%s" %(current_site.domain,
-        reverse('rpx.views.rpx_response'))
+        reverse('rpx_response'))
     }
     
 """

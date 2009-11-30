@@ -11,13 +11,37 @@ TODO:
   * Optionally implement the mapping api https://rpxnow.com/docs#mappings to ease integration?
   
 INSTALLATION:
-  * Put the code in a directory called 'rpx' somewhere in your path and put 'rpx' in your installed apps. additionally, create a url path that serves up the rpx_response view in views.py.
+  * Install `django_rpx` in site-packages of your system or somewhere in your path and put `django_rpx` in your installed apps.
   * You will also need to put the RPXNOW_API_KEY, RPXNOW_REALM and optionally RPX_TRUSTED_PROVIDERS into your settings.py (RPXNOW_REALM isn't well documented on the rpxnow site, but it's the subdomain of rpxnow.com that handles your HTTP callback - e.g. if http://possumpalace-blog.rpx.now is th destination of the link in your provided rpxnow snippet, your realm is "possumpalace-blog".
   * You will also need to add rpx to your authentication providers list
   AUTHENTICATION_BACKENDS = (
-    'rpx.backends.RpxBackend',
+    'django_rpx.backends.RpxBackend',
     'django.contrib.auth.backends.ModelBackend',
   )
   * rpx template tags are already included
   * You will also need to serve /rpx_login and /rpx_register requests
-  
+  * As now django_rpx is external module (not application as part of the project), so, it needs to create a method in our application to serve rpx_response:
+  def rpx_response(request):
+      """ Special method to handle return from rpxnow side
+      """
+      token = request.GET.get('token', '')
+      if not token:
+          token = request.POST.get('token', '')
+      if not token: return HttpResponseForbidden()
+      user=authenticate(token=token)
+      if user and user.is_active:
+          login(request, user)
+
+          if hasattr(user, 'is_new'):
+              return HttpResponseRedirect(reverse('on_registration'))
+
+          # existing user (login)
+          return HttpResponseRedirect(reverse('on_login'))
+
+      else:
+          return HttpResponseForbidden()
+
+  * And configure url to it:
+  url(r'^rpx_response',     'your_app.views.rpx_response',  name='rpx_response'),
+
+

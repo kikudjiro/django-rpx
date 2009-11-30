@@ -1,8 +1,8 @@
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django-rpx.models import RpxData
-from django-rpx.views import permute_name
+from django_rpx.models import RpxData
+from django_rpx.views import permute_name
 import settings
 TRUSTED_PROVIDERS=set(getattr(settings,'RPX_TRUSTED_PROVIDERS', []))
 
