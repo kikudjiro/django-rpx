@@ -21,7 +21,7 @@ TODO:
 register = template.Library()
 
 @register.inclusion_tag('rpx_link_start.html', takes_context=True)
-def rpx_link_start(context, text):
+def rpx_link_start(context):
     current_site=Site.objects.get_current()
     
     return {

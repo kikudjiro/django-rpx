@@ -9,6 +9,5 @@ setup(name='django_rpx',
     packages=['django_rpx', 'django_rpx.templatetags'],
     package_dir={'django_rpx': '', 'django_rpx.templatetags': 'templatetags'},
     package_data={'django_rpx': ['templates/*.html']},
-    #data_files=[('templates', ['templates/*.html'])],
 )
 
