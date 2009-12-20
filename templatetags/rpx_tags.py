@@ -20,6 +20,22 @@ TODO:
 
 register = template.Library()
 
+@register.inclusion_tag('rpx_link_start.html', takes_context=True)
+def rpx_link_start(context, text):
+    current_site=Site.objects.get_current()
+    
+    return {
+      'realm': settings.RPXNOW_REALM,
+      'token_url': "http://%s%s" % (current_site.domain,
+        reverse('rpx_response'))
+    }
+    
+"""
+put this in "rpx_script.html" in your templates dir.
+<a class="rpxnow" onclick="return false;"
+   href="https://{{ realm }}.rpxnow.com/openid/v2/signin?token_url={{ token_url }}">
+"""
+
 @register.inclusion_tag('rpx_link.html', takes_context=True)
 def rpx_link(context, text):
     current_site=Site.objects.get_current()

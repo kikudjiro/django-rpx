@@ -6,7 +6,9 @@ setup(name='django_rpx',
     author='Alexander Alexeychuk',
     author_email='kikudjiro@gmail.com',
     url='http://github.com/kikudjiro/django_rpx',
-    packages=['', 'templatetags'],
-    data_files=[('templates', ['templates/*.html'])],
+    packages=['django_rpx', 'django_rpx.templatetags'],
+    package_dir={'django_rpx': '', 'django_rpx.templatetags': 'templatetags'},
+    package_data={'django_rpx': ['templates/*.html']},
+    #data_files=[('templates', ['templates/*.html'])],
 )
 
