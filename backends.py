@@ -75,7 +75,8 @@ class RpxBackend:
                         i+=1
                 except User.DoesNotExist:
                     #available name!
-                    user=User.objects.create_user(username, email)
+                    #user=User.objects.create_user(username, email)
+                    user=User.objects.create_user(username, '')
                 rpxdata=RpxData(identifier=rpx_id)
                 rpxdata.user=user
                 user.is_new = True
