@@ -75,8 +75,11 @@ class RpxBackend:
                         i+=1
                 except User.DoesNotExist:
                     #available name!
-                    #user=User.objects.create_user(username, email)
-                    user=User.objects.create_user(username, '')
+                    if 'Facebook' == provider:
+                        # without initial email
+                        user=User.objects.create_user(username, '')
+                    else:
+                        user=User.objects.create_user(username, email)
                 rpxdata=RpxData(identifier=rpx_id)
                 rpxdata.user=user
                 user.is_new = True
