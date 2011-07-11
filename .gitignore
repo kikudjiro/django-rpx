@@ -1,0 +1,5 @@
+*CACHE*
+dist
+MANIFEST
+*.pyc
+django_rpx.egg-info/
