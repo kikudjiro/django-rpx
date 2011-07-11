@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django_rpx.models import RpxData
 from django_rpx.views import permute_name
-import settings
+from django.conf import settings
 TRUSTED_PROVIDERS=set(getattr(settings,'RPX_TRUSTED_PROVIDERS', []))
 
 class RpxBackend:

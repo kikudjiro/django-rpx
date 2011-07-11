@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django_rpx.models import RpxData
-import settings
+from django.conf import settings
 
 def permute_name(name_string, num):
     num_str=str(num)
