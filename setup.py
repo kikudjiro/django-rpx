@@ -8,7 +8,7 @@ README = read('README.rst')
 
 setup(
     name = "django-rpx",
-    version = "1.0",
+    version = "1.1",
     description='django-rpx provides handles site login and user registration using the rpxnow.com service',
     url = 'http://github.com/kikudjiro/django-rpx',
     license = 'BSD',
