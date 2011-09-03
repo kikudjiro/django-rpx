@@ -16,7 +16,8 @@ class RpxBackend:
         try:
             return User.objects.get(rpxdata__identifier=rpx_id)
         except User.DoesNotExist:
-            return None                
+            return None
+            
     def authenticate(self, token=''):
         """
         TODO: pass in a message array here which can be filled with an error
@@ -47,49 +48,58 @@ class RpxBackend:
         info_page_url = profile.get('url')
         provider=profile.get("providerName")
 
-        user=self.get_user_by_rpx_id(rpx_id)
-        
+        # get user from DB by this rpx
+        user = self.get_user_by_rpx_id(rpx_id)
+        if user:
+            # we have rpx and associated user
+            # so, just return that user
+            return user
+
+        # if there is not user associated with this rpx
+        # try to match user by email
+        if email and provider in TRUSTED_PROVIDERS:
+            # beware - this would allow account theft, so we only allow it
+            # for trusted providers
+            user_candidates=User.objects.all().filter(email=email)
+            # if unambiguous, do it. otherwise, don't.
+            if user_candidates.count() == 1:
+                [user] = user_candidates
+            elif user_candidates.count() > 1:
+                return None
+
+        # still no single user.
+        # we didn't find any user with such an email (if was given)
         if not user:
-            # no match. we can try to match on email, though, provided that doesn't steal
-            # an rpx association
-            if email and profile['providerName'] in TRUSTED_PROVIDERS:
-                #beware - this would allow account theft, so we only allow it
-                #for trusted providers
-                user_candidates=User.objects.all().filter(
-                  rpxdata=None).filter(email=email)
-                # if unambiguous, do it. otherwise, don't.
-                if user_candidates.count()==1:
-                    [user]=user_candidates
-                    rpxdata=RpxData(identifier=rpx_id)
+            # create a new user - but there may be duplicate user names.
+            username = nickname
+            user = None
+            try:
+                i=0
+                while True:
+                    User.objects.get(username=username)
+                    username = permute_name(nickname, i)
+                    i += 1
+            except User.DoesNotExist:
+                # available name!
+                # create new user
+                if 'Facebook' == provider:
+                    # without initial email
+                    # because email provided by facebook is not correct
+                    user = User.objects.create_user(username, '')
                 else:
-                    return None
-            else:
-                #no match, create a new user - but there may be duplicate user names.
-                username=nickname
-                user=None
-                try:
-                    i=0
-                    while True:
-                        User.objects.get(username=username)
-                        username=permute_name(nickname, i)
-                        i+=1
-                except User.DoesNotExist:
-                    #available name!
-                    if 'Facebook' == provider:
-                        # without initial email
-                        user=User.objects.create_user(username, '')
-                    else:
-                        user=User.objects.create_user(username, email)
-                rpxdata=RpxData(identifier=rpx_id)
-                rpxdata.user=user
+                    user = User.objects.create_user(username, email)
                 user.is_new = True
-                rpxdata.save()
-            
+                user.save()
+
+        # create new rpx record and link it to the user
+        rpxdata = RpxData(identifier=rpx_id)
         if profile_pic_url:
-            user.rpxdata.profile_pic_url=profile_pic_url
+            rpxdata.profile_pic_url=profile_pic_url
         if info_page_url:
-            user.rpxdata.info_page_url=info_page_url
+            rpxdata.info_page_url=info_page_url
         if provider:
-            user.rpxdata.provider=provider
-        user.rpxdata.save()
+            rpxdata.provider=provider
+        rpxdata.user = user
+        rpxdata.save()
         return user
+            
