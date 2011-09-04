@@ -64,6 +64,7 @@ class RpxBackend:
             # if unambiguous, do it. otherwise, don't.
             if user_candidates.count() == 1:
                 [user] = user_candidates
+                return user
             elif user_candidates.count() > 1:
                 return None
 
